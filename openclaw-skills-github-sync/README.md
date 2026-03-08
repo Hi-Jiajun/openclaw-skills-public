@@ -37,24 +37,17 @@ chmod +x scripts/sync.sh
 ./scripts/sync.sh
 ```
 
-## 安全说明
-
-⚠️ 使用前请确保：
-1. 已配置 .gitignore 排除敏感目录
-2. 推送前检查 `git status`
-3. credentials/ 目录已排除
-
 ## 感谢支持
 
 如果这个项目对你有帮助，欢迎扫码捐赠支持！你的支持是我持续更新和维护的动力！ 🙏
 
 ### 支付宝
 
-![支付宝收款码](https://share.fnnas.net/s/3dff1ad85631457d82)
+<img src="1772974731593.jpg" width="200" />
 
 ### 微信
 
-![微信收款码](https://share.fnnas.net/s/b7ec52abe6474bec99)
+<img src="mm_facetoface_collect_qrcode_1772974720410.png" width="200" />
 
 ---
 

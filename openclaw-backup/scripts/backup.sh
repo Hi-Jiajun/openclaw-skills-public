@@ -1,13 +1,19 @@
-#!/bin/bash
-
 # OpenClaw Backup Script for Linux/Mac
-# ==== 请根据需要修改以下配置 ====
-BACKUP_ROOT="/path/to/backup"        # 备份根目录，请修改为你的路径
-OLD_BACKUP_ROOT="/path/to/backup_old" # 旧备份目录
-OPENCLAW_HOME="$HOME/.openclaw"     # OpenCLAW 主目录
-KEEP_COUNT=3                         # 保留最新3个
-MAX_OLD_SIZE_GB=10                   # 超过10GB清理
-TARGET_OLD_SIZE_GB=5                 # 清理到5GB
+# ==== 配置加载 ====
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/config.sh"
+
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+else
+    # 默认配置
+    BACKUP_ROOT="$HOME/openclaw_backup"
+    OLD_BACKUP_ROOT="$HOME/openclaw_backup_old"
+    OPENCLAW_HOME="$HOME/.openclaw"
+    KEEP_COUNT=3
+    MAX_OLD_SIZE_GB=10
+    TARGET_OLD_SIZE_GB=5
+fi
 
 # ============================================
 BACKUP_DATE=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -74,6 +80,7 @@ cat > "$BACKUP_DIR/RESTORE.md" << EOF
 
 ## Notes
 - Restore path: $BACKUP_DIR
+- Backup root: $BACKUP_ROOT
 EOF
 
 echo ""
