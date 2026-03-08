@@ -5,24 +5,81 @@
 ## 公开 Skills
 
 ### [openclaw-backup](https://github.com/Hi-Jiajun/openclaw-backup)
-OpenClaw 配置自动备份工具。支持每日自动备份、保留多个备份版本、旧备份自动清理。
 
-### [openclaw-skills-github-sync](https://github.com/Hi-Jiajun/openclaw-skills-github-sync)
-OpenClaw skills GitHub 同步工具。支持私有/公开仓库同步，非实时手动确认。
+> 自动备份 OpenClaw 配置，让数据永不丢失
 
-## Skill 格式
+一个 OpenClaw skill，提供交互式配置向导，自动备份你的 OpenClaw 配置。
 
-每个公开的 skill 都是标准的 OpenClaw skill 结构：
+**特性：**
+- 🎯 交互式配置向导，5分钟快速上手
+- 🔄 自动备份，保留多个版本
+- 🧹 智能清理，自动转移和删除旧备份
+- 🌐 支持 Windows / Linux / Mac
 
+**安装：**
+
+```bash
+# Windows
+cd $env:USERPROFILE\.openclaw\skills
+git clone https://github.com/Hi-Jiajun/openclaw-backup.git
+
+# Linux / Mac
+cd ~/.openclaw/skills
+git clone https://github.com/Hi-Jiajun/openclaw-backup.git
 ```
-skill-name/
-├── SKILL.md           # Skill 定义和使用说明
-├── README.md           # 简介
-└── scripts/           # 脚本目录
-    ├── *.ps1          # Windows 脚本
-    └── *.sh           # Linux/Mac 脚本
-```
 
-点击上方链接查看详细使用说明。
+或从 ClawHub 安装：https://clawhub.ai/skills/openclaw-backup
 
 ---
+
+### [openclaw-skills-github-sync](https://github.com/Hi-Jiajun/openclaw-skills-github-sync)
+
+> 将你的 OpenClaw skills 同步到 GitHub
+
+一个 OpenClaw skill，提供交互式配置向导，将你的 skills 同步到 GitHub 仓库。
+
+**特性：**
+- 🎯 交互式配置向导，5分钟快速上手
+- 🔒 手动确认同步，安全可控
+- 🌐 私有/公开双仓库支持
+- 🌍 支持 Windows / Linux / Mac
+
+**安装：**
+
+```bash
+# Windows
+cd $env:USERPROFILE\.openclaw\skills
+git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
+
+# Linux / Mac
+cd ~/.openclaw/skills
+git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
+```
+
+或从 ClawHub 安装：https://clawhub.ai/skills/openclaw-skills-github-sync
+
+---
+
+## 快速开始
+
+每个 skill 都提供交互式配置向导，首次使用只需运行：
+
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File "scripts/setup.ps1"
+
+# Linux / Mac
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+```
+
+详细使用说明请查看各 skill 的 SKILL.md。
+
+---
+
+## Star ⭐
+
+如果对你有帮助，欢迎 Star！
+
+- https://github.com/Hi-Jiajun/openclaw-backup
+- https://github.com/Hi-Jiajun/openclaw-skills-github-sync
