@@ -1,11 +1,19 @@
 # OpenClaw Backup Script
-# ==== 请根据需要修改以下配置 ====
-$backupRoot = "Z:\backup\openclaw_backup"        # 备份根目录
-$oldBackupRoot = "Z:\backup\openclaw_backup_old"  # 旧备份目录
-$openclawHome = "$env:USERPROFILE\.openclaw"     # OpenClaw 主目录
-$keepCount = 3                                      # 保留最新3个
-$maxOldSizeGB = 10                                  # 超过10GB清理
-$targetOldSizeGB = 5                                # 清理到5GB
+# ==== 配置加载 ====
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$configFile = Join-Path $scriptDir "config.ps1"
+
+if (Test-Path $configFile) {
+    . $configFile
+} else {
+    # 默认配置
+    $backupRoot = "Z:\backup\openclaw_backup"
+    $oldBackupRoot = "Z:\backup\openclaw_backup_old"
+    $openclawHome = "$env:USERPROFILE\.openclaw"
+    $keepCount = 3
+    $maxOldSizeGB = 10
+    $targetOldSizeGB = 5
+}
 
 # ============================================
 $backupDate = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
@@ -65,7 +73,7 @@ $restoreGuide = @"
 ### Method 1: Full Restore
 1. Stop OpenClaw Gateway
 2. Backup current config
-3. Copy files from backup to `$env:USERPROFILE\.openclaw\`
+3. Copy files from backup to $openclawHome
 4. Restart Gateway
 
 ### Method 2: Selective Restore
@@ -86,27 +94,29 @@ Write-Host "Success: $successCount, Failed: $failCount"
 Write-Host "=========================================="
 
 # Cleanup old backups
-$allBackups = Get-ChildItem -Path $backupRoot -Directory | Where-Object { 
-    $_.Name -ne "my-own-skills" 
-} | Sort-Object LastWriteTime -Descending
+if ($keepCount -gt 0) {
+    $allBackups = Get-ChildItem -Path $backupRoot -Directory -ErrorAction SilentlyContinue | Where-Object { 
+        $_.Name -ne "my-own-skills" 
+    } | Sort-Object LastWriteTime -Descending
 
-if ($allBackups.Count -gt $keepCount) {
-    Write-Host ""
-    Write-Host "Cleaning old backups (keep latest $keepCount)..."
-    $allBackups | Select-Object -Skip $keepCount | ForEach-Object {
-        $oldDir = "$oldBackupRoot\$($_.Name)"
-        New-Item -ItemType Directory -Force -Path $oldDir | Out-Null
-        Move-Item $_.FullName $oldDir -Force
-        Write-Host "[MOVED] $($_.Name) -> old backup"
+    if ($allBackups -and $allBackups.Count -gt $keepCount) {
+        Write-Host ""
+        Write-Host "Cleaning old backups (keep latest $keepCount)..."
+        $allBackups | Select-Object -Skip $keepCount | ForEach-Object {
+            $oldDir = "$oldBackupRoot\$($_.Name)"
+            New-Item -ItemType Directory -Force -Path $oldDir | Out-Null
+            Move-Item $_.FullName $oldDir -Force
+            Write-Host "[MOVED] $($_.Name) -> old backup"
+        }
     }
 }
 
 # Old backup size cleanup
-if (Test-Path $oldBackupRoot) {
+if ($oldBackupRoot -and (Test-Path $oldBackupRoot)) {
     Write-Host ""
     Write-Host "Checking old backups size..."
     
-    $oldFolders = Get-ChildItem -Path $oldBackupRoot -Directory -Recurse | Sort-Object LastWriteTime
+    $oldFolders = Get-ChildItem -Path $oldBackupRoot -Directory -Recurse -ErrorAction SilentlyContinue | Sort-Object LastWriteTime
     $totalSizeGB = 0
     
     foreach ($folder in $oldFolders) {
@@ -119,7 +129,7 @@ if (Test-Path $oldBackupRoot) {
     if ($totalSizeGB -gt $maxOldSizeGB) {
         Write-Host "Cleaning to $targetOldSizeGB GB..."
         
-        $oldFolders = Get-ChildItem -Path $oldBackupRoot -Directory -Recurse | Sort-Object LastWriteTime
+        $oldFolders = Get-ChildItem -Path $oldBackupRoot -Directory -Recurse -ErrorAction SilentlyContinue | Sort-Object LastWriteTime
         
         foreach ($folder in $oldFolders) {
             if ($totalSizeGB -le $targetOldSizeGB) { break }

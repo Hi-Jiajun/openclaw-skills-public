@@ -69,6 +69,20 @@ chmod +x scripts/backup.sh
 
 详细说明请查看 [SKILL.md](SKILL.md)
 
+## 感谢支持
+
+如果这个项目对你有帮助，欢迎扫码捐赠支持！你的支持是我持续更新和维护的动力！ 🙏
+
+### 微信
+
+<img src="mm_facetoface_collect_qrcode_1772974720410.png" width="200" />
+
+### 支付宝
+
+<img src="1772974731593.jpg" width="200" />
+
+---
+
 ## Star ⭐
 
 如果对你有帮助，欢迎 Star！

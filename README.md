@@ -1,5 +1,7 @@
 # OpenClaw Public Skills
 
+> 感谢使用！如果你觉得这些技能对你有帮助，欢迎扫码支持！
+
 这里存放我愿意公开分享的 OpenClaw skills。
 
 ## 公开 Skills
@@ -57,6 +59,20 @@ git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
 ```
 
 或从 ClawHub 安装：https://clawhub.ai/skills/openclaw-skills-github-sync
+
+---
+
+## 感谢支持
+
+如果你觉得这些技能对你有帮助，欢迎扫码捐赠支持！你的支持是我持续更新和维护的动力！ 🙏
+
+### 微信
+
+<img src="mm_facetoface_collect_qrcode_1772974720410.png" width="150" />
+
+### 支付宝
+
+<img src="1772974731593.jpg" width="150" />
 
 ---
 
