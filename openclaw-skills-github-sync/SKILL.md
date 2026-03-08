@@ -2,6 +2,7 @@
 name: openclaw-skills-github-sync
 description: |
   将 OpenClaw skills 同步到 GitHub（非实时，需手动确认）。
+  支持 Windows/Linux/Mac。
   使用场景：skill 创建或修改完成后同步到 GitHub
 ---
 
@@ -15,41 +16,60 @@ description: |
 - 支持公开仓库同步
 - 每次同步需要手动确认（非实时）
 - 自动检测变更并提交推送
+- 支持 Windows / Linux / Mac
+
+## 支持平台
+
+| 平台 | 脚本 |
+|------|------|
+| Windows | scripts/sync.ps1 |
+| Linux | scripts/sync.sh |
+| Mac | scripts/sync.sh |
 
 ## 配置项
 
-使用前请根据需要修改脚本中的配置：
-
+### Windows (scripts/sync.ps1)
 ```powershell
-# 私有 skills 路径
-$privatePath = "C:\Users\hiliang\Documents\openclaw-skills-private"
+$privatePath = "C:\Users\YourName\openclaw-skills-private"
+$publicPath = "C:\Users\YourName\openclaw-skills-public"
+```
 
-# 公开 skills 路径
-$publicPath = "C:\Users\hiliang\Documents\openclaw-skills-public"
+### Linux/Mac (scripts/sync.sh)
+```bash
+PRIVATE_PATH="$HOME/openclaw-skills-private"
+PUBLIC_PATH="$HOME/openclaw-skills-public"
 ```
 
 ## 使用方法
 
-### 1. 首次设置
+### 首次设置
 
-```powershell
-# 安装 GitHub CLI
+安装 GitHub CLI：
+```bash
+# Linux
+sudo apt install gh
+
+# Mac
+brew install gh
+
+# Windows
 winget install GitHub.cli
-
-# 登录 GitHub
-gh auth login
-
-# 创建私有仓库（用于私有 skills）
-gh repo create your-private-skills --private
-
-# 创建公开仓库（用于公开 skills）
-gh repo create your-public-skills --public
 ```
 
-### 2. 初始化本地仓库
+登录 GitHub：
+```bash
+gh auth login
+```
 
-```powershell
-cd C:\PATH\TO\your-skills-folder
+创建仓库：
+```bash
+gh repo create my-skills --private
+gh repo create my-skills-public --public
+```
+
+初始化本地仓库：
+```bash
+cd ~/my-skills-folder
 git init
 git config user.email "your@email.com"
 git config user.name "Your Name"
@@ -57,11 +77,17 @@ git remote add origin https://github.com/YOUR_USERNAME/your-repo.git
 git push -u origin main
 ```
 
-### 3. 同步 skills
+### 同步 skills
 
-运行脚本：
+#### Windows
 ```powershell
-powershell -ExecutionPolicy Bypass -File "openclaw-skills-github-sync\sync.ps1"
+powershell -ExecutionPolicy Bypass -File "scripts/sync.ps1"
+```
+
+#### Linux / Mac
+```bash
+chmod +x scripts/sync.sh
+./scripts/sync.sh
 ```
 
 ## 同步流程
