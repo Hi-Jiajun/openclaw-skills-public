@@ -1,7 +1,7 @@
 ---
 name: openclaw-backup
 description: |
-  自动备份 OpenClaw 本地存储配置文件。支持 Linux/Mac。
+  自动备份 OpenClaw 本地存储配置文件。支持 Windows/Linux/Mac。
   使用场景：(1) 定期备份配置 (2) 迁移配置 (3) 恢复配置
   
   这是一个 OpenClaw 备份工具 skill，提供交互式配置向导。
@@ -11,8 +11,6 @@ description: |
 
 > 自动备份 OpenClaw 配置，让数据永不丢失
 
-⚠️ **注意**：当前版本仅支持 **Linux/Mac**。Windows 版本正在开发中。
-
 ## 功能
 
 - ✅ 交互式配置向导
@@ -20,17 +18,25 @@ description: |
 - ✅ 保留最近 N 个备份
 - ✅ 旧备份自动转移和清理
 - ✅ 按容量自动清理旧备份
-- ⚠️ Linux / Mac 可用（Windows 开发中）
+- ✅ 支持 Windows / Linux / Mac
 
 ## 支持平台
 
-| 平台 | 脚本 | 状态 |
-|------|------|------|
-| Linux | scripts/backup.sh | ✅ 可用 |
-| Mac | scripts/backup.sh | ✅ 可用 |
-| Windows | scripts/backup.ps1 | ⏳ 开发中 |
+| 平台 | 脚本 |
+|------|------|
+| Windows | scripts/backup.ps1 |
+| Linux | scripts/backup.sh |
+| Mac | scripts/backup.sh |
 
 ## 安装方式
+
+### Windows
+
+```powershell
+# 克隆到 OpenClaw skills 目录
+cd $env:USERPROFILE\.openclaw\skills
+git clone https://github.com/Hi-Jiajun/openclaw-backup.git
+```
 
 ### Linux / Mac
 
@@ -41,6 +47,16 @@ git clone https://github.com/Hi-Jiajun/openclaw-backup.git
 ```
 
 ## 快速开始
+
+### Windows
+
+```powershell
+# 首次配置（交互式向导）
+powershell -ExecutionPolicy Bypass -File "scripts/setup.ps1"
+
+# 执行备份
+powershell -ExecutionPolicy Bypass -File "scripts/backup.ps1"
+```
 
 ### Linux / Mac
 
@@ -56,13 +72,13 @@ chmod +x scripts/backup.sh
 
 ## 配置文件说明
 
-### setup.sh 会生成 config.sh
+### setup.ps1 / setup.sh 会生成配置文件
 
-首次运行 setup.sh 会创建 `scripts/config.sh` 文件，保存你的配置。
+首次运行 setup.ps1 或 setup.sh 会创建配置文件，保存你的配置。
 
-### backup.sh 会自动加载配置
+### backup.ps1 / backup.sh 会自动加载配置
 
-backup.sh 会自动读取 setup.sh 生成的配置文件，无需手动修改。
+脚本会自动读取配置文件，无需手动修改。
 
 ## 备份内容
 
@@ -76,15 +92,8 @@ backup.sh 会自动读取 setup.sh 生成的配置文件，无需手动修改。
 | identity/ | 身份配置 |
 | skills/ | 全局技能 |
 
-## 安全说明
-
-⚠️ **重要**：
-- credentials/ 目录包含敏感信息，请妥善保管备份
-- 备份文件定期检查完整性
-
 ## 注意事项
 
-1. ⚠️ Windows 版本正在开发中
-2. credentials/ 包含敏感信息 - 妥善保管备份
-3. 首次使用建议运行交互式配置
-4. 建议设置自动备份任务防止数据丢失
+1. credentials/ 包含敏感信息 - 妥善保管备份
+2. 首次使用建议运行交互式配置
+3. 建议设置自动备份任务防止数据丢失
