@@ -2,17 +2,9 @@
 
 > 将你的 OpenClaw skills 同步到 GitHub
 
-一个 OpenClaw skill，提供交互式配置向导，将你的 skills 同步到 GitHub 仓库。
+⚠️ **注意**：当前版本仅支持 **Linux/Mac**。
 
 ## 安装
-
-### Windows
-
-```powershell
-# 克隆到 OpenClaw skills 目录
-cd $env:USERPROFILE\.openclaw\skills
-git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
-```
 
 ### Linux / Mac
 
@@ -26,27 +18,17 @@ git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
 
 ## 特性
 
-- 🎯 交互式配置向导，5分钟快速上手
-- 🔒 手动确认同步，安全可控
-- 🌐 私有/公开双仓库支持
-- 🌍 支持 Windows / Linux / Mac
+- ✅ 交互式配置向导
+- ✅ 私有/公开仓库支持
+- ✅ 手动确认同步
+- ⚠️ Linux / Mac 支持（Windows 开发中）
 
 ## 快速开始
 
-### Windows
-
-```powershell
-# 首次配置（交互式向导）
-powershell -ExecutionPolicy Bypass -File "scripts/setup.ps1"
-
-# 执行同步
-powershell -ExecutionPolicy Bypass -File "scripts/sync.ps1"
-```
-
-### Linux
+### Linux / Mac
 
 ```bash
-# 首次配置（交互式向导）
+# 首次配置
 chmod +x scripts/setup.sh
 ./scripts/setup.sh
 
@@ -55,19 +37,12 @@ chmod +x scripts/sync.sh
 ./scripts/sync.sh
 ```
 
-### Mac
+## 安全说明
 
-```bash
-# 首次配置（交互式向导）
-chmod +x scripts/setup.sh
-./scripts/setup.sh
-
-# 执行同步
-chmod +x scripts/sync.sh
-./scripts/sync.sh
-```
-
-详细说明请查看 [SKILL.md](SKILL.md)
+⚠️ 使用前请确保：
+1. 已配置 .gitignore 排除敏感目录
+2. 推送前检查 `git status`
+3. credentials/ 目录已排除
 
 ## 感谢支持
 

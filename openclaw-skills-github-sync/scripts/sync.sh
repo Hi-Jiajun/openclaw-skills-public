@@ -1,13 +1,23 @@
 #!/bin/bash
 
-# OpenClaw Skills GitHub Sync Script for Linux/Mac
-# ==== 请根据你的路径修改以下配置 ====
-PRIVATE_PATH="$HOME/openclaw-skills-private"   # 私有 skills 路径
-PUBLIC_PATH="$HOME/openclaw-skills-public"      # 公开 skills 路径
+# OpenClaw Skills GitHub Sync Script
+# ==== 配置加载 ====
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/config.sh"
 
-echo "=========================================="
-echo "OpenClaw Skills GitHub Sync"
-echo "=========================================="
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+else
+    # 默认配置
+    PRIVATE_PATH="$HOME/openclaw-skills-private"
+    PUBLIC_PATH="$HOME/openclaw-skills-public"
+fi
+
+Write-Host "=========================================="
+Write-Host "OpenClaw Skills GitHub Sync"
+Write-Host "=========================================="
+
+gitPath="git"
 
 # Function to sync a repository
 sync_repo() {
@@ -26,11 +36,44 @@ sync_repo() {
         return
     fi
     
+    # 检查是否有 .gitignore
+    if [ ! -f ".gitignore" ]; then
+        echo "[WARN] No .gitignore found, creating..."
+        cat > .gitignore << 'EOF'
+# Credentials
+credentials/
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temp
+*.tmp
+*.temp
+EOF
+    fi
+    
     status=$(git status --porcelain)
     
     if [ -n "$status" ]; then
-        echo "Changes in $repo_name"
+        echo "Changes in $repo_name:"
         echo "$status"
+        
+        echo ""
+        echo "Run 'git status' to review changes before committing."
+        echo "The following files will be added:"
+        git diff --cached --name-only 2>/dev/null || echo "(no staged files)"
+        
+        read -p "Continue with sync? (y/n): " confirm
+        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo "Sync cancelled."
+            return
+        fi
         
         git add -A
         git commit -m "Sync $(date '+%Y-%m-%d %H:%M')"
