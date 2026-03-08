@@ -22,7 +22,7 @@ cd ~/.openclaw/skills
 git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
 ```
 
-或从 ClawHub 直接安装：https://clawhub.ai/skills/openclaw-skills-github-sync
+或从 ClawHub 直接安装：https://clawhub.ai/skills/openclaw-skills-github-sync-hiliang
 
 ## 特性
 
@@ -71,15 +71,9 @@ chmod +x scripts/sync.sh
 
 ## 感谢支持
 
-如果这个项目对你有帮助，欢迎扫码捐赠支持！你的支持是我持续更新和维护的动力！ 🙏
+如果这个项目对你有帮助，欢迎支持！你的支持是我持续更新和维护的动力！ 🙏
 
-### 微信
-
-<img src="mm_facetoface_collect_qrcode_1772974720410.png" width="200" />
-
-### 支付宝
-
-<img src="1772974731593.jpg" width="200" />
+**有意捐赠支持的朋友，请通过 GitHub 私信联系作者。**
 
 ---
 
