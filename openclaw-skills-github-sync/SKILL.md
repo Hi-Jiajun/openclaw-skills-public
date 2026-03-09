@@ -1,4 +1,4 @@
-﻿---
+---
 name: project-maintainer
 description: |
   自动维护项目的 GitHub 和 ClawHub 同步。检测本地修改 → 同步到 private/public 仓库 → 发布到 ClawHub → 自动修复问题。
@@ -52,9 +52,9 @@ description: |
 
 ## 路径配置
 
-- 自建 skills 目录：`{USER_PATH}\.openclaw\workspace\skills\`
-- 私有仓库：`{USER_PATH}\.openclaw\workspace\openclaw-skills-private\`
-- 公开仓库：`{USER_PATH}\.openclaw\workspace\openclaw-skills-public\`
+- 自建 skills 目录：`C:\Users\hiliang\.openclaw\workspace\skills\`
+- 私有仓库：`C:\Users\hiliang\.openclaw\workspace\openclaw-skills-private\`
+- 公开仓库：`C:\Users\hiliang\.openclaw\workspace\openclaw-skills-public\`
 
 ## 常用命令
 
@@ -89,7 +89,7 @@ powershell -ExecutionPolicy Bypass -File "project-maintainer.ps1"
 ## 敏感信息处理
 
 同步到 public 仓库时会自动移除：
-- 绝对路径（如 {USER_PATH}\...）
+- 绝对路径（如 C:\Users\hiliang\...）
 - 个人凭证信息
 - API Keys
 - 本地特定配置
@@ -99,4 +99,3 @@ powershell -ExecutionPolicy Bypass -File "project-maintainer.ps1"
 - 需要 Git CLI 和 GitHub CLI
 - 需要先登录 GitHub：`gh auth login`
 - 需要先登录 ClawHub：`clawdhub login`
-

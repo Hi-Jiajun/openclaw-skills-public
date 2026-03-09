@@ -1,27 +1,31 @@
-﻿# Project Maintainer - 自动维护 GitHub 和 ClawHub 同步
+# Project Maintainer - 自动维护 GitHub 和 ClawHub 同步
 
 param(
     [string]$Target = "all"
 )
 
 # 配置
-$workspacePath = "{USER_PATH}\.openclaw\workspace"
+$workspacePath = "C:\Users\hiliang\.openclaw\workspace"
 $skillsPath = "$workspacePath\skills"
-$privateRepoPath = "$workspacePath\openclaw-skills-private"
-$publicRepoPath = "$workspacePath\openclaw-skills-public"
+$privateRepoPath = "C:\Users\hiliang\Documents\openclaw-skills-private"
+$publicRepoPath = "C:\Users\hiliang\Documents\openclaw-skills-public"
 
 $gitPath = "C:\Program Files\Git\cmd\git.exe"
 $ghPath = "C:\Program Files\GitHub CLI\gh.exe"
 $clawdhubPath = "clawdhub"
 
 $customSkills = @(
+    "openclaw-backup",
+    "openclaw-skills-github-sync"
+)
+
+# Private skills (only sync to private repo)
+$privateOnlySkills = @(
     "mweb-automation",
     "mweb-get-task", 
     "mweb-download",
     "mweb-publish",
-    "mweb-seed",
-    "openclaw-backup",
-    "openclaw-skills-github-sync"
+    "mweb-seed"
 )
 
 function Write-Log {
@@ -66,10 +70,10 @@ function Remove-SensitiveInfo {
     param([string]$SkillPath)
     
     $sensitivePatterns = @(
-        "{USER_PATH}",
-        "{USER_PATH}",
-        "{USER_PATH}",
-        "{USER_PATH}"
+        "C:\\Users\\hiliang",
+        "C:\Users\hiliang",
+        "Documents\\mttools",
+        "AppData\\Roaming"
     )
     
     Get-ChildItem -Path $SkillPath -Recurse -Include "*.md","*.ps1","*.json" | ForEach-Object {
@@ -93,7 +97,7 @@ function Sync-Repository {
     param(
         [string]$RepoPath,
         [string]$RepoName,
-        [bool]$IsPublic = $false
+        [string]$Target = "all"  # all, publicOnly, privateOnly
     )
     
     if (-not (Test-Path $RepoPath)) {
@@ -108,23 +112,55 @@ function Sync-Repository {
     Set-Location $RepoPath
     & $gitPath pull origin main 2>&1 | Out-Null
     
-    Write-Log "Syncing skills to $RepoName..." "INFO"
-    
-    foreach ($skill in $customSkills) {
-        $src = "$skillsPath\$skill"
-        $dst = "$RepoPath\$skill"
+    # ===== 同步可公开的 skills（从 .openclaw/skills，不是 workspace） =====
+    if ($Target -eq "all" -or $Target -eq "publicOnly") {
+        Write-Log "Syncing public skills to $RepoName..." "INFO"
         
-        if (Test-Path $src) {
-            if (Test-Path $dst) {
-                Remove-Item -Path $dst -Recurse -Force
-            }
+        $publicSkills = @(
+            "openclaw-backup",
+            "openclaw-skills-github-sync"
+        )
+        
+        $globalSkillsPath = "C:\Users\hiliang\.openclaw\skills"
+        
+        foreach ($skill in $publicSkills) {
+            $src = "$globalSkillsPath\$skill"
+            $dst = "$RepoPath\$skill"
             
-            Copy-Item -Path $src -Destination $dst -Recurse -Force
-            
-            if ($IsPublic) {
+            if (Test-Path $src) {
+                if (Test-Path $dst) {
+                    Remove-Item -Path $dst -Recurse -Force
+                }
+                
+                Copy-Item -Path $src -Destination $dst -Recurse -Force
                 Remove-SensitiveInfo -SkillPath $dst
                 Write-Log "  - $skill (public, sanitized)" "OK"
-            } else {
+            }
+        }
+    }
+    
+    # ===== 同步私有的 skills（从 workspace） =====
+    if ($Target -eq "all" -or $Target -eq "privateOnly") {
+        Write-Log "Syncing private skills to $RepoName..." "INFO"
+        
+        $privateSkills = @(
+            "mweb-automation",
+            "mweb-get-task", 
+            "mweb-download",
+            "mweb-publish",
+            "mweb-seed"
+        )
+        
+        foreach ($skill in $privateSkills) {
+            $src = "$skillsPath\$skill"
+            $dst = "$RepoPath\$skill"
+            
+            if (Test-Path $src) {
+                if (Test-Path $dst) {
+                    Remove-Item -Path $dst -Recurse -Force
+                }
+                
+                Copy-Item -Path $src -Destination $dst -Recurse -Force
                 Write-Log "  - $skill (private)" "OK"
             }
         }
@@ -204,12 +240,12 @@ if (-not (Test-GitHubAvailable)) { exit 1 }
 
 if ($Target -eq "all" -or $Target -eq "private") {
     Write-Log "=== Syncing Private Repository ===" "INFO"
-    Sync-Repository -RepoPath $privateRepoPath -RepoName "openclaw-skills-private" -IsPublic $false
+    Sync-Repository -RepoPath $privateRepoPath -RepoName "openclaw-skills-private" -Target "all"
 }
 
 if ($Target -eq "all" -or $Target -eq "public") {
     Write-Log "=== Syncing Public Repository ===" "INFO"
-    Sync-Repository -RepoPath $publicRepoPath -RepoName "openclaw-skills-public" -IsPublic $true
+    Sync-Repository -RepoPath $publicRepoPath -RepoName "openclaw-skills-public" -Target "publicOnly"
 }
 
 # 注意：ClawHub 发布需要先在网页上接受许可证条款
@@ -221,7 +257,10 @@ if ($Target -eq "all" -or $Target -eq "clawhub") {
     Write-Log "=== Publishing to ClawHub ===" "INFO"
     Write-Log "NOTE: If publish fails, please visit https://clawhub.ai and accept license terms first" "WARN"
     
-    foreach ($skill in $customSkills) {
+    # Only publish public skills to ClawHub
+    $clawhubSkills = @("openclaw-backup", "openclaw-skills-github-sync")
+    
+    foreach ($skill in $clawhubSkills) {
         $skillPublicPath = "$publicRepoPath\$skill"
         
         if (Test-Path $skillPublicPath) {
@@ -239,4 +278,3 @@ if ($Target -eq "all" -or $Target -eq "clawhub") {
 Write-Log "==========================================" "INFO"
 Write-Log "Sync Complete!" "OK"
 Write-Log "==========================================" "INFO"
-

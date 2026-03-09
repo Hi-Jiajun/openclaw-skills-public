@@ -1,7 +1,7 @@
-﻿# OpenClaw Skills GitHub Sync Script
+# OpenClaw Skills GitHub Sync Script
 # Sync your custom skills to GitHub
 
-$skillsPath = "{USER_PATH}\.openclaw\workspace\skills"
+$skillsPath = "C:\Users\hiliang\.openclaw\workspace\skills"
 
 Write-Host "=========================================="
 Write-Host "OpenClaw Skills GitHub Sync"
@@ -61,4 +61,3 @@ if ($status) {
 
 Write-Host ""
 Write-Host "=========================================="
-
