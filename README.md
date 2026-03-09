@@ -1,64 +1,54 @@
 # OpenClaw Public Skills
 
-> 感谢使用！如果你觉得这些技能对你有帮助，欢迎扫码支持！
+> 感谢使用！如果你觉得这些技能对你有帮助，欢迎支持！
 
 这里存放我愿意公开分享的 OpenClaw skills。
 
 ## 公开 Skills
 
-### [openclaw-backup-hiliang](https://github.com/Hi-Jiajun/openclaw-backup)
+### openclaw-backup
 
 > 自动备份 OpenClaw 配置，让数据永不丢失
 
-⚠️ **注意**：当前版本仅支持 **Linux/Mac**（Windows 开发中）
+**功能：**
+- 主备份：按主机名和日期分类
+- 自建 skills：单独备份
+- 自动清理旧备份
 
 **安装：**
-
 ```bash
-# Linux / Mac
+# 方式1: 从 ClawHub 安装
+clawdhub install openclaw-backup
+
+# 方式2: GitHub
 cd ~/.openclaw/skills
 git clone https://github.com/Hi-Jiajun/openclaw-backup.git
 ```
 
-或从 ClawHub 安装：https://clawhub.ai/skills/openclaw-backup-hiliang
+### openclaw-skills-github-sync
 
----
+> 自动维护 GitHub 仓库和 ClawHub 同步
 
-### [openclaw-skills-github-sync-hiliang](https://github.com/Hi-Jiajun/openclaw-skills-github-sync)
-
-> 将你的 OpenClaw skills 同步到 GitHub
-
-⚠️ **注意**：当前版本仅支持 **Linux/Mac**（Windows 开发中）
+**功能：**
+- 双仓库同步（private + public）
+- 大众化处理（脱敏）
+- 自动发布到 ClawHub
 
 **安装：**
-
 ```bash
-# Linux / Mac
+# 方式1: 从 ClawHub 安装
+clawdhub install openclaw-skills-github-sync
+
+# 方式2: GitHub
 cd ~/.openclaw/skills
 git clone https://github.com/Hi-Jiajun/openclaw-skills-github-sync.git
 ```
-
-或从 ClawHub 安装：https://clawhub.ai/skills/openclaw-skills-github-sync-hiliang
 
 ---
 
 ## 感谢支持
 
-如果这些技能对你有帮助，欢迎扫码捐赠支持！你的支持是我持续更新和维护的动力！ 🙏
-
-### 支付宝
-
-<img src="1772974731593.jpg" width="150" />
-
-### 微信
-
-<img src="mm_facetoface_collect_qrcode_1772974720410.png" width="150" />
-
----
-
-## Star ⭐
-
-如果对你有帮助，欢迎 Star！
+如果这些技能对你有帮助，欢迎 Star ⭐
 
 - https://github.com/Hi-Jiajun/openclaw-backup
 - https://github.com/Hi-Jiajun/openclaw-skills-github-sync
