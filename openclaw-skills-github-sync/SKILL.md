@@ -1,109 +1,102 @@
----
-name: openclaw-skills-github-sync
+﻿---
+name: project-maintainer
 description: |
-  将 OpenClaw skills 同步到 GitHub（非实时，需手动确认）。
-  支持 Linux/Mac。
-  使用场景：skill 创建或修改完成后同步到 GitHub
+  自动维护项目的 GitHub 和 ClawHub 同步。检测本地修改 → 同步到 private/public 仓库 → 发布到 ClawHub → 自动修复问题。
+  使用场景：(1) 本地 skill 修改后自动同步 (2) 定时检查并更新仓库
 ---
 
-# OpenClaw Skills GitHub Sync Skill
+# 项目维护 (Project Maintainer)
 
-> 将你的 OpenClaw skills 同步到 GitHub
+自动维护 GitHub 仓库和 ClawHub 同步。
 
-⚠️ **注意**：当前版本仅支持 **Linux/Mac**。Windows 版本正在开发中。
+## 概述
 
-## 功能
+监听本地 skills 修改，自动完成以下流程：
 
-- ✅ 交互式配置向导
-- ✅ 支持私有仓库同步
-- ✅ 支持公开仓库同步
-- ✅ 手动确认同步（非实时，更安全）
-- ✅ 自动检测变更并提交推送
-- ⚠️ Linux / Mac 支持
+```
+本地修改 → 检验 ClawHub → 同步 private → 同步 public → 发布 ClawHub → 自动修复
+```
 
-## 支持平台
+## 仓库对应
 
-| 平台 | 脚本 | 状态 |
+| 仓库 | 类型 | 用途 |
 |------|------|------|
-| Linux | scripts/sync.sh | ✅ 可用 |
-| Mac | scripts/sync.sh | ✅ 可用 |
-| Windows | scripts/sync.ps1 | ⏳ 开发中 |
+| openclaw-skills-private | 私有 | 你创建的自定义 skills |
+| openclaw-skills-public | 公开 | 愿意公开的 skills |
+| openclaw-backup-hiliang | 公开 | 备份相关 |
+| openclaw-skills-github-sync-hiliang | 公开 | 同步工具 |
 
-## 使用方法
+## 自动同步流程
 
-### 首次设置
+### 1. 检测修改
+- 扫描 workspace 中的自建 skills
+- 检测 git 状态变化
 
-```bash
-# 安装 GitHub CLI
-# Linux
-sudo apt install gh
+### 2. ClawHub 检验
+- 检查 SKILL.md 格式
+- 验证描述是否完整
+- 检查是否有敏感信息
 
-# Mac
-brew install gh
+### 3. 同步到 GitHub
+- **private 仓库**：同步所有自建 skills
+- **public 仓库**：同步脱敏后的 skills（移除个人配置、凭证路径等）
 
-# 登录
-gh auth login
+### 4. 发布到 ClawHub
+- 自动发布/更新到 ClawHub
+- 检测发布结果
 
-# 创建仓库
-gh repo create my-skills --private
-gh repo create my-skills-public --public
+### 5. 自动修复
+- 如果 ClawHub 提示问题
+- 自动分析问题并修复
+- 重新发布验证
+
+## 路径配置
+
+- 自建 skills 目录：`{USER_PATH}\.openclaw\workspace\skills\`
+- 私有仓库：`{USER_PATH}\.openclaw\workspace\openclaw-skills-private\`
+- 公开仓库：`{USER_PATH}\.openclaw\workspace\openclaw-skills-public\`
+
+## 常用命令
+
+### 手动触发同步
+```powershell
+powershell -ExecutionPolicy Bypass -File "project-maintainer.ps1"
 ```
 
-### 初始化本地仓库
-
-```bash
-cd ~/my-skills-folder
-git init
-git config user.email "your@email.com"
-git config user.name "Your Name"
-git remote add origin https://github.com/YOUR_USERNAME/your-repo.git
-
-# 确保创建 .gitignore 文件排除敏感目录
-echo "credentials/" >> .gitignore
-echo "*.key" >> .gitignore
-
-git add .gitignore
-git commit -m "Add .gitignore"
-git push -u origin main
+### 仅同步 private
+```powershell
+./project-maintainer.ps1 -Target private
 ```
 
-### 同步 skills
-
-#### Linux / Mac
-```bash
-chmod +x scripts/sync.sh
-./scripts/sync.sh
+### 仅同步 public
+```powershell
+./project-maintainer.ps1 -Target public
 ```
 
-## 安全说明
-
-### 重要：排除敏感目录
-
-本工具会自动创建 .gitignore 文件，包含以下排除项：
-
-```
-credentials/
-*.key
-*.pem
-.DS_Store
-*.log
+### 仅发布到 ClawHub
+```powershell
+./project-maintainer.ps1 -Target clawhub
 ```
 
-**使用前请确保**：
-1. 仓库中已包含 .gitignore 文件
-2. 敏感目录（如 credentials/）已被排除
-3. 推送前运行 `git status` 确认要推送的内容
+## 自动触发
 
-### 同步前确认
+建议设置 cron 任务，每天定时检查并同步：
 
-脚本会：
-1. 检查 .gitignore 是否存在，如不存在则自动创建
-2. 显示将要推送的文件列表
-3. 询问确认后才执行推送
+```
+每天 3:00 自动备份 + 同步
+```
+
+## 敏感信息处理
+
+同步到 public 仓库时会自动移除：
+- 绝对路径（如 {USER_PATH}\...）
+- 个人凭证信息
+- API Keys
+- 本地特定配置
 
 ## 注意事项
 
-- ⚠️ Windows 版本正在开发中
-- 公开仓库建议设置为私有
-- 同步前务必检查 .gitignore 配置
-- credentials/ 目录请确保已排除
+- 需要 Git CLI 和 GitHub CLI
+- 需要先登录 GitHub：`gh auth login`
+- 需要先登录 ClawHub：`clawdhub login`
+
